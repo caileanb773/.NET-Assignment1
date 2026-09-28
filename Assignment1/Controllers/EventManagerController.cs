@@ -52,5 +52,12 @@ namespace Assignment1.Controllers
             // return that specific event view
             return View(MyEvent);
         }
+
+        // overloaded version that accepst and attendee object
+        [HttpPost]
+        public IActionResult ManageAttendees(int Id, Attendee Attendee)
+        {
+            return View();
+        }
     }
 }
