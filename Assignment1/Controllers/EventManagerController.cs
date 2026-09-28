@@ -37,5 +37,10 @@ namespace Assignment1.Controllers
 
             return View(MyEvents);
         }
+
+        public IActionResult ManageAttendees(int Id)
+        {
+            return View();
+        }
     }
 }
