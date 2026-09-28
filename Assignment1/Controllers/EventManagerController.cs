@@ -5,10 +5,11 @@ namespace Assignment1.Controllers
 {
     public class EventManagerController : Controller 
     {
-        public IActionResult Index()
-        {
-            List<Event> MyEvents = new List<Event>();
+        List<Event> MyEvents = new List<Event>();
 
+        // constructor makes the dummy events and adds them to the list
+        public EventManagerController()
+        {
             Attendee Mike = new Attendee() { Email = "a@test.com", Name = "Mike" };
             Attendee Bob = new Attendee() { Email = "b@test.com", Name = "Bob" };
 
@@ -34,13 +35,22 @@ namespace Assignment1.Controllers
 
             MyEvents.Add(DotNetLec);
             MyEvents.Add(RealTimeProgLec);
+        }
 
+        // return index view, showing the table of events
+        public IActionResult Index()
+        {
             return View(MyEvents);
         }
 
+        // show the manageattendees view, showing the specific attendees for a given event's ID
         public IActionResult ManageAttendees(int Id)
         {
-            return View();
+            // for each event in MyEvents, check if its id matches the passed id
+            Event MyEvent = MyEvents.FirstOrDefault(e => e.Id == Id);
+
+            // return that specific event view
+            return View(MyEvent);
         }
     }
 }
