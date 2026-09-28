@@ -2,11 +2,25 @@
 
 @{
     ViewData["Title"] = "Manage Attendees";
+    int eventId = Model.Id; // need to cache this so the form knows which event to put the attendee into
 }
 
 <h1>Manage Attendees - @Model.Title</h1>
 
 <!-- Sign up form -->
+<form method="post">
+    <!-- Need this to fetch event id cached above -->
+    <input type="hidden" name="id" value="@eventId" 
+
+    <label>Name</label>
+    <input type="text" name="Name" />
+
+    <label>Email</label>
+    <input type="email" name="Email" />
+
+    <button type="submit">Sign Up</button>
+    <a asp-controller="EventManager" asp-action="Index">Back to Events</a>
+</form>
 
 <!-- Display Attendees -->
 <h1>Current Attendees (@Model.Attendees.Count)</h1>
