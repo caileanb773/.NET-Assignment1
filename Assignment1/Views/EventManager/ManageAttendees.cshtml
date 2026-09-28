@@ -1,7 +1,24 @@
-﻿@model List<Assignment1.Models.Event>
+﻿@model Assignment1.Models.Event
 
 @{
     ViewData["Title"] = "Manage Attendees";
 }
 
-<h1>Manage Attendees - </h1>
+<h1>Manage Attendees - @Model.Title</h1>
+
+<!-- Sign up form -->
+
+<!-- Display Attendees -->
+<h1>Current Attendees (@Model.Attendees.Count)</h1>
+
+@if (Model.Attendees.Count == 0)
+{
+    <p>No attendees yet.</p>
+}
+else
+{
+    @foreach (var att in Model.Attendees)
+    {
+        <p><b>@att.Name</b> (@att.Email)</p>
+    }
+}
