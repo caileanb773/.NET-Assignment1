@@ -22,7 +22,13 @@
         <td>@eventItem.Title</td>
         <td>@eventItem.Date</td>
         <td>@eventItem.Location</td>
-        <td><a href="#">Manage Attendees</a></td>
+        <td>
+            <a asp-controller="EventManager"
+                asp-action="ManageAttendees"
+                asp-route-id="@eventItem.Id">
+                Manage Attendees
+            </a>
+        </td>
     </tr>
 }
 
