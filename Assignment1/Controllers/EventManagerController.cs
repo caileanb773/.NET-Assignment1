@@ -44,10 +44,10 @@ namespace Assignment1.Controllers
         }
 
         // show the manageattendees view, showing the specific attendees for a given event's ID
-        public IActionResult ManageAttendees(int Id)
+        public IActionResult ManageAttendees(int id)
         {
             // for each event in MyEvents, check if its id matches the passed id
-            Event MyEvent = MyEvents.FirstOrDefault(e => e.Id == Id);
+            Event MyEvent = MyEvents.FirstOrDefault(e => e.Id == id);
 
             // return that specific event view
             return View(MyEvent);
@@ -55,9 +55,13 @@ namespace Assignment1.Controllers
 
         // overloaded version that accepst and attendee object
         [HttpPost]
-        public IActionResult ManageAttendees(int Id, Attendee Attendee)
+        public IActionResult ManageAttendees(int id, Attendee attendee)
         {
-            return View();
+            Event eventItem = MyEvents.FirstOrDefault(e => e.Id == id);
+
+            eventItem.Attendees.Add(attendee);
+
+            return View(eventItem);
         }
     }
 }
