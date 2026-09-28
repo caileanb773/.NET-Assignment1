@@ -7,7 +7,7 @@ namespace Assignment1.Controllers
     {
         public IActionResult Index()
         {
-            List<Event> events = new List<Event>();
+            List<Event> MyEvents = new List<Event>();
 
             Attendee Mike = new Attendee() { Email = "a@test.com", Name = "Mike" };
             Attendee Bob = new Attendee() { Email = "b@test.com", Name = "Bob" };
@@ -32,7 +32,10 @@ namespace Assignment1.Controllers
 
             };
 
-            return View(events);
+            MyEvents.Add(DotNetLec);
+            MyEvents.Add(RealTimeProgLec);
+
+            return View(MyEvents);
         }
     }
 }
