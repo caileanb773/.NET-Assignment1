@@ -1,65 +1,58 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Assignment1.Data;
 using Assignment1.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Assignment1.Controllers
 {
     public class EventManagerController : Controller 
     {
-        List<Event> MyEvents = new List<Event>();
+        private readonly ApplicationDbContext _context;
 
-        // constructor makes the dummy events and adds them to the list
-        public EventManagerController()
+        public EventManagerController(ApplicationDbContext context)
         {
-            Attendee Mike = new Attendee() { Email = "a@test.com", Name = "Mike" };
-            Attendee Bob = new Attendee() { Email = "b@test.com", Name = "Bob" };
-
-            Event DotNetLec = new Event()
-            {
-                Id = 1,
-                Title = ".NET Lecture",
-                Date = DateTime.Now,
-                Location = "A1202",
-                Attendees = new List<Attendee> { Mike, Bob },
-
-            };
-
-            Event RealTimeProgLec = new Event()
-            {
-                Id = 2,
-                Title = "Real-Time Programming Lecture",
-                Date = DateTime.Now,
-                Location = "CA412",
-                Attendees = new List<Attendee> { Mike, Bob },
-
-            };
-
-            MyEvents.Add(DotNetLec);
-            MyEvents.Add(RealTimeProgLec);
+            _context = context;
         }
 
         // return index view, showing the table of events
         public IActionResult Index()
         {
-            return View(MyEvents);
+            return View(_context.Events.ToList());
         }
 
         // show the manageattendees view, showing the specific attendees for a given event's ID
         public IActionResult ManageAttendees(int id)
         {
-            // for each event in MyEvents, check if its id matches the passed id
-            Event MyEvent = MyEvents.FirstOrDefault(e => e.Id == id);
+            Event eventItem = _context.Events
+                .Include(e => e.Attendees)
+                .FirstOrDefault(e => e.Id == id);
 
-            // return that specific event view
-            return View(MyEvent);
+            if (eventItem == null)
+            {
+                return NotFound();
+            }
+
+            return View(eventItem);
         }
 
         // overloaded version that accepst and attendee object
         [HttpPost]
         public IActionResult ManageAttendees(int id, Attendee attendee)
         {
-            Event eventItem = MyEvents.FirstOrDefault(e => e.Id == id);
+            Event eventItem = _context.Events
+                .Include(e => e.Attendees)
+                .FirstOrDefault(e => e.Id == id);
+
+            if (eventItem == null)
+            {
+                return NotFound();
+            }
+
+            attendee.Id = Guid.NewGuid().ToString();
+            attendee.EventId = id;
 
             eventItem.Attendees.Add(attendee);
+            _context.SaveChanges();
 
             return View(eventItem);
         }
