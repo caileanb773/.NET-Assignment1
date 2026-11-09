@@ -78,5 +78,38 @@ namespace Assignment1.Controllers
             return View(eventItem);
         }
 
+        // display the edit event form
+        public IActionResult Edit(int id)
+        {
+            var eventItem = _context.Events.Find(id);
+
+            if (eventItem == null)
+            {
+                return NotFound();
+            }
+
+            return View(eventItem);
+        }
+
+        // handle the submitted edit form
+        [HttpPost]
+        public IActionResult Edit(int id, Event eventItem)
+        {
+            if (id != eventItem.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Events.Update(eventItem);
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(eventItem);
+        }
+
     }
 }
