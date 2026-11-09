@@ -128,5 +128,68 @@ namespace Assignment1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //////////////////////////////////
+        ///
+        /// Attendee-specific functions
+        /// 
+        //////////////////////////////////
+
+        // display attendee edit form
+        public IActionResult EditAttendee(int eventId, string attendeeId)
+        {
+            var attendee = _context.Attendees.FirstOrDefault(a =>
+                a.Id == attendeeId && a.EventId == eventId);
+
+            if (attendee == null)
+            {
+                return NotFound();
+            }
+
+            return View(attendee);
+        }
+
+        // save attendee changes
+        [HttpPost]
+        public IActionResult EditAttendee(int eventId, string attendeeId, Attendee attendee)
+        {
+            var existing = _context.Attendees.FirstOrDefault(a =>
+                a.Id == attendeeId && a.EventId == eventId);
+
+            if (existing == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                existing.Name = attendee.Name;
+                existing.Email = attendee.Email;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(ManageAttendees), new { id = eventId });
+            }
+
+            return View(attendee);
+        }
+
+        // delete attendee
+        [HttpPost]
+        public IActionResult DeleteAttendee(int eventId, string attendeeId)
+        {
+            var attendee = _context.Attendees.FirstOrDefault(a =>
+                a.Id == attendeeId && a.EventId == eventId);
+
+            if (attendee == null)
+            {
+                return NotFound();
+            }
+
+            _context.Attendees.Remove(attendee);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(ManageAttendees), new { id = eventId });
+        }
+
     }
 }
