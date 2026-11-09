@@ -6,8 +6,11 @@
 
 <h1>Edit Attendee</h1>
 
-<form asp-action="EditAttendee" method="post">
-    <input type="hidden" name="eventId" value="@Model.EventId" />
+<form asp-action="EditAttendee"
+      asp-route-eventId="@Model.EventId"
+      asp-route-attendeeId="@Model.Id"
+      method="post">
+
     <input type="hidden" asp-for="Id" />
 
     <label asp-for="Name"></label>
