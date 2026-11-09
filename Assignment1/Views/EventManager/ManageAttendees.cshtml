@@ -33,6 +33,22 @@ else
 {
     @foreach (var att in Model.Attendees)
     {
-        <p><b>@att.Name</b> (@att.Email)</p>
+        <p>
+            <b>@att.Name</b> (@att.Email)
+
+            <a asp-action="EditAttendee"
+               asp-route-eventId="@Model.Id"
+               asp-route-attendeeId="@att.Id">
+                Edit
+            </a>
+
+            <form asp-action="DeleteAttendee"
+                  asp-route-eventId="@Model.Id"
+                  asp-route-attendeeId="@att.Id"
+                  method="post"
+                  style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
+        </p>
     }
 }
