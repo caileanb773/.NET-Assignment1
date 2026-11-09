@@ -25,16 +25,14 @@
         <td>@eventItem.Date</td>
         <td>@eventItem.Location</td>
         <td>
-            <a asp-controller="EventManager"
-                asp-action="ManageAttendees"
-                asp-route-id="@eventItem.Id">
-                Manage Attendees
-            </a>
-                <a asp-action="Edit" asp-route-id="@eventItem.Id">Edit</a>
+            <!-- manage attendees btn -->
+            <a href="/events/@eventItem.Id/attendees">Manage Attendees</a>
 
-                <form asp-action="Delete" asp-route-id="@eventItem.Id" method="post" style="display:inline;">
-                    <button type="submit">Delete</button>
-                </form>
+            <!-- edit and delete buttons -->
+            <a asp-action="Edit" asp-route-id="@eventItem.Id">Edit</a>
+            <form asp-action="Delete" asp-route-id="@eventItem.Id" method="post" style="display:inline;">
+                <button type="submit">Delete</button>
+            </form>
         </td>
     </tr>
 }

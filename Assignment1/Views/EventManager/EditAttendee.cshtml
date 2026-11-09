@@ -20,7 +20,5 @@
     <input asp-for="Email" />
 
     <button type="submit">Save Changes</button>
-    <a asp-controller="EventManager"
-       asp-action="ManageAttendees"
-       asp-route-id="@Model.EventId">Cancel</a>
+    <a href="/events/@Model.EventId/attendees">Cancel</a>
 </form>

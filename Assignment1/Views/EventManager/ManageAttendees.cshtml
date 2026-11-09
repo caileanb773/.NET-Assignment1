@@ -8,7 +8,7 @@
 <h1>Manage Attendees - @Model.Title</h1>
 
 <!-- Sign up form -->
-<form method="post">
+<form action="/events/@Model.Id/attendees/create" method="post">
     <!-- Need this to fetch event id cached above -->
     <input type="hidden" name="id" value="@eventId" />
 
