@@ -56,5 +56,27 @@ namespace Assignment1.Controllers
 
             return View(eventItem);
         }
+
+        // display the create event form
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // handle the submitted create event form
+        [HttpPost]
+        public IActionResult Create(Event eventItem)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Events.Add(eventItem);
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(eventItem);
+        }
+
     }
 }
