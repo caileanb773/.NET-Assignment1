@@ -1,0 +1,23 @@
+﻿@model Assignment1.Models.Attendee
+
+@{
+    ViewData["Title"] = "Edit Attendee";
+}
+
+<h1>Edit Attendee</h1>
+
+<form asp-action="EditAttendee" method="post">
+    <input type="hidden" name="eventId" value="@Model.EventId" />
+    <input type="hidden" asp-for="Id" />
+
+    <label asp-for="Name"></label>
+    <input asp-for="Name" />
+
+    <label asp-for="Email"></label>
+    <input asp-for="Email" />
+
+    <button type="submit">Save Changes</button>
+    <a asp-controller="EventManager"
+       asp-action="ManageAttendees"
+       asp-route-id="@Model.EventId">Cancel</a>
+</form>
