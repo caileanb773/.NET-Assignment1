@@ -21,11 +21,12 @@ namespace Assignment1.Controllers
         }
 
         // show the manageattendees view, showing the specific attendees for a given event's ID
-        public IActionResult ManageAttendees(int id)
+        [HttpGet("/events/{eventId}/attendees")]
+        public IActionResult ManageAttendees(int eventId)
         {
             Event eventItem = _context.Events
                 .Include(e => e.Attendees)
-                .FirstOrDefault(e => e.Id == id);
+                .FirstOrDefault(e => e.Id == eventId);
 
             if (eventItem == null)
             {
@@ -36,12 +37,13 @@ namespace Assignment1.Controllers
         }
 
         // overloaded version that accepst and attendee object
-        [HttpPost]
-        public IActionResult ManageAttendees(int id, Attendee attendee)
+        [HttpPost("/events/{eventId}/attendees/create")]
+        public IActionResult ManageAttendees(int eventId, Attendee attendee)
         {
+            Console.WriteLine("POST ManageAttendees reached!");
             Event eventItem = _context.Events
                 .Include(e => e.Attendees)
-                .FirstOrDefault(e => e.Id == id);
+                .FirstOrDefault(e => e.Id == eventId);
 
             if (eventItem == null)
             {
@@ -49,12 +51,12 @@ namespace Assignment1.Controllers
             }
 
             attendee.Id = Guid.NewGuid().ToString();
-            attendee.EventId = id;
+            attendee.EventId = eventId;
 
             eventItem.Attendees.Add(attendee);
             _context.SaveChanges();
 
-            return View(eventItem);
+            return Redirect($"/events/{eventId}/attendees");
         }
 
         // display the create event form
@@ -167,7 +169,7 @@ namespace Assignment1.Controllers
 
                 _context.SaveChanges();
 
-                return RedirectToAction(nameof(ManageAttendees), new { id = eventId });
+                return Redirect($"/events/{eventId}/attendees");
             }
 
             return View(attendee);
@@ -188,7 +190,7 @@ namespace Assignment1.Controllers
             _context.Attendees.Remove(attendee);
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(ManageAttendees), new { id = eventId });
+            return Redirect($"/events/{eventId}/attendees");
         }
 
     }
