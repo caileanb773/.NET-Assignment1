@@ -150,6 +150,18 @@ namespace Assignment1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult Details(int id)
+        {
+            var eventItem = _context.Events
+                .Include(e => e.Attendees)
+                .FirstOrDefault(e => e.Id == id);
+
+            if (eventItem == null) return NotFound();
+
+            return View(eventItem);
+        }
+
+
         //////////////////////////////////
         ///
         /// Attendee-specific functions
