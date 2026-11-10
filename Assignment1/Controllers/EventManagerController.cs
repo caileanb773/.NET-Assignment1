@@ -102,7 +102,7 @@ namespace Assignment1.Controllers
 
         // handle the submitted edit form
         [HttpPost]
-        public IActionResult Edit(int id, Event eventItem)
+        public async Task<IActionResult> Edit(int id, Event eventItem, IFormFile bannerImage)
         {
             if (id != eventItem.Id)
             {
@@ -111,6 +111,11 @@ namespace Assignment1.Controllers
 
             if (ModelState.IsValid)
             {
+                if (bannerImage != null)
+                {
+                    eventItem.BannerUrl = await _blobStorageService.UploadImageAsync(bannerImage);
+                }
+
                 _context.Events.Update(eventItem);
                 _context.SaveChanges();
 
