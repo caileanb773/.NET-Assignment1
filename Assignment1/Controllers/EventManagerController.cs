@@ -1,5 +1,6 @@
 ﻿using Assignment1.Data;
 using Assignment1.Models;
+using Assignment1.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,10 +9,12 @@ namespace Assignment1.Controllers
     public class EventManagerController : Controller 
     {
         private readonly ApplicationDbContext _context;
+        private readonly BlobStorageService _blobStorageService;
 
-        public EventManagerController(ApplicationDbContext context)
+        public EventManagerController(ApplicationDbContext context, BlobStorageService blobStorageService)
         {
             _context = context;
+            _blobStorageService = blobStorageService;
         }
 
         // return index view, showing the table of events
@@ -40,7 +43,6 @@ namespace Assignment1.Controllers
         [HttpPost("/events/{eventId}/attendees/create")]
         public IActionResult ManageAttendees(int eventId, Attendee attendee)
         {
-            Console.WriteLine("POST ManageAttendees reached!");
             Event eventItem = _context.Events
                 .Include(e => e.Attendees)
                 .FirstOrDefault(e => e.Id == eventId);
@@ -65,12 +67,17 @@ namespace Assignment1.Controllers
             return View();
         }
 
-        // handle the submitted create event form
+        // handle the submitted create event form, handle images
         [HttpPost]
-        public IActionResult Create(Event eventItem)
+        public async Task<IActionResult> Create(Event eventItem, IFormFile bannerImage)
         {
             if (ModelState.IsValid)
             {
+                if (bannerImage != null)
+                {
+                    eventItem.BannerUrl = await _blobStorageService.UploadImageAsync(bannerImage);
+                }
+
                 _context.Events.Add(eventItem);
                 _context.SaveChanges();
 
