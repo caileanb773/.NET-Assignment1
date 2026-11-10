@@ -69,7 +69,7 @@ namespace Assignment1.Controllers
 
         // handle the submitted create event form, handle images
         [HttpPost]
-        public async Task<IActionResult> Create(Event eventItem, IFormFile bannerImage)
+        public async Task<IActionResult> Create(Event eventItem, IFormFile? bannerImage)
         {
             if (ModelState.IsValid)
             {
@@ -82,9 +82,13 @@ namespace Assignment1.Controllers
                 _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
+            } 
+            else
+            {
+                return BadRequest(ModelState);
             }
 
-            return View(eventItem);
+                return View(eventItem);
         }
 
         // display the edit event form
@@ -102,7 +106,7 @@ namespace Assignment1.Controllers
 
         // handle the submitted edit form
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, Event eventItem, IFormFile bannerImage)
+        public async Task<IActionResult> Edit(int id, Event eventItem, IFormFile? bannerImage)
         {
             if (id != eventItem.Id)
             {
@@ -120,9 +124,13 @@ namespace Assignment1.Controllers
                 _context.SaveChanges();
 
                 return RedirectToAction(nameof(Index));
+            } 
+            else
+            {
+                return BadRequest(ModelState);
             }
 
-            return View(eventItem);
+                return View(eventItem);
         }
 
         // handle event deletion
