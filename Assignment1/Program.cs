@@ -1,4 +1,5 @@
 using Assignment1.Data;
+using Azure.Storage.Blobs;
 using Microsoft.EntityFrameworkCore;
 
 namespace Assignment1
@@ -14,7 +15,10 @@ namespace Assignment1
 
             // wire up dbcontext
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); 
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddSingleton(x =>
+                new BlobServiceClient(builder.Configuration["AzureStorage:ConnectionString"]));
 
             var app = builder.Build();
 
