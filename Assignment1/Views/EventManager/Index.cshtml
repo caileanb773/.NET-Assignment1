@@ -33,6 +33,8 @@
             <form asp-action="Delete" asp-route-id="@eventItem.Id" method="post" style="display:inline;">
                 <button type="submit">Delete</button>
             </form>
+                <!-- event details btn -->
+                <a asp-action="EventDetails" asp-route-id="@eventItem.Id">Details</a>
         </td>
     </tr>
 }
