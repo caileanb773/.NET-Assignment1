@@ -150,7 +150,7 @@ namespace Assignment1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Details(int id)
+        public IActionResult EventDetails(int id)
         {
             var eventItem = _context.Events
                 .Include(e => e.Attendees)
