@@ -1,11 +1,14 @@
 ﻿using Assignment1.Data;
 using Assignment1.Models;
 using Assignment1.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Assignment1.Controllers
 {
+
+    [Authorize]
     public class EventManagerController : Controller 
     {
         private readonly ApplicationDbContext _context;
@@ -17,13 +20,15 @@ namespace Assignment1.Controllers
             _blobStorageService = blobStorageService;
         }
 
-        // return index view, showing the table of events
+        // return index view, showing the table of events. only anonymous action
+        [AllowAnonymous]
         public IActionResult Index()
         {
             return View(_context.Events.ToList());
         }
 
         // show the manageattendees view, showing the specific attendees for a given event's ID
+        [Authorize(Roles = "Organizer")]
         [HttpGet("/events/{eventId}/attendees")]
         public IActionResult ManageAttendees(int eventId)
         {
@@ -40,6 +45,7 @@ namespace Assignment1.Controllers
         }
 
         // overloaded version that accepst and attendee object
+        [Authorize(Roles = "Organizer")]
         [HttpPost("/events/{eventId}/attendees/create")]
         public IActionResult ManageAttendees(int eventId, Attendee attendee)
         {
@@ -62,12 +68,14 @@ namespace Assignment1.Controllers
         }
 
         // display the create event form
+        [Authorize(Roles = "Organizer")]
         public IActionResult Create()
         {
             return View();
         }
 
         // handle the submitted create event form, handle images
+        [Authorize(Roles = "Organizer")]
         [HttpPost]
         public async Task<IActionResult> Create(Event eventItem, IFormFile? bannerImage)
         {
@@ -92,6 +100,7 @@ namespace Assignment1.Controllers
         }
 
         // display the edit event form
+        [Authorize(Roles = "Organizer")]
         public IActionResult Edit(int id)
         {
             var eventItem = _context.Events.Find(id);
@@ -105,6 +114,7 @@ namespace Assignment1.Controllers
         }
 
         // handle the submitted edit form
+        [Authorize(Roles = "Organizer")]
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Event eventItem, IFormFile? bannerImage)
         {
@@ -134,6 +144,7 @@ namespace Assignment1.Controllers
         }
 
         // handle event deletion
+        [Authorize(Roles = "Organizer")]
         [HttpPost]
         public IActionResult Delete(int id)
         {
@@ -150,6 +161,7 @@ namespace Assignment1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [Authorize(Roles = "Organizer")]
         public IActionResult EventDetails(int id)
         {
             var eventItem = _context.Events
@@ -169,6 +181,7 @@ namespace Assignment1.Controllers
         //////////////////////////////////
 
         // display attendee edit form
+        [Authorize(Roles = "Organizer")]
         public IActionResult EditAttendee(int eventId, string attendeeId)
         {
             var attendee = _context.Attendees.FirstOrDefault(a =>
@@ -183,6 +196,7 @@ namespace Assignment1.Controllers
         }
 
         // save attendee changes
+        [Authorize(Roles = "Organizer")]
         [HttpPost]
         public IActionResult EditAttendee(int eventId, string attendeeId, Attendee attendee)
         {
@@ -208,6 +222,7 @@ namespace Assignment1.Controllers
         }
 
         // delete attendee
+        [Authorize(Roles = "Organizer")]
         [HttpPost]
         public IActionResult DeleteAttendee(int eventId, string attendeeId)
         {
