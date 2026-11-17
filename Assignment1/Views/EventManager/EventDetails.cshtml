@@ -15,20 +15,34 @@
 <p><strong>Date:</strong> @Model.Date</p>
 <p><strong>Location:</strong> @Model.Location</p>
 
-<h2>Attendees (@Model.Attendees.Count)</h2>
-
-@if (Model.Attendees.Count == 0)
+@if (User.IsInRole("Organizer"))
 {
-    <p>No attendees yet.</p>
+    <p>
+        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
+            <button type="submit">Delete</button>
+        </form>
+        <a href="/events/@Model.Id/attendees">Manage Attendees</a>
+    </p>
 }
-else
+
+@if (User.Identity!.IsAuthenticated)
 {
-    <ul>
-        @foreach (var attendee in Model.Attendees)
-        {
-            <li>@attendee.Name (@attendee.Email)</li>
-        }
-    </ul>
+    <h2>Attendees (@Model.Attendees.Count)</h2>
+
+    @if (Model.Attendees.Count == 0)
+    {
+        <p>No attendees yet.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var attendee in Model.Attendees)
+            {
+                <li>@attendee.Name (@attendee.Email)</li>
+            }
+        </ul>
+    }
 }
 
 <a asp-action="Index">Back to Events</a>

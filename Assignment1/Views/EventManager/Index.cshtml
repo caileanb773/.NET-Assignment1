@@ -7,7 +7,10 @@
 <h1>Event Manager</h1>
 <h6>Select an event to manage attendees</h6>
 
-<a asp-action="Create">Create Event</a>
+@if (User.IsInRole("Organizer"))
+{
+    <a asp-action="Create">Create Event</a>
+}
 
 <table>
     <tr>
@@ -17,26 +20,29 @@
         <th>Manage</th>
     </tr>
 
+    @foreach (var eventItem in Model)
+    {
+        <tr>
+            <td>@eventItem.Title</td>
+            <td>@eventItem.Date</td>
+            <td>@eventItem.Location</td>
+            <td>
+                @if (User.IsInRole("Organizer"))
+                {
+                    <!-- manage attendees btn -->
+                    <a href="/events/@eventItem.Id/attendees">Manage Attendees</a>
 
-@foreach (var eventItem in Model)
-{
-    <tr>
-        <td>@eventItem.Title</td>
-        <td>@eventItem.Date</td>
-        <td>@eventItem.Location</td>
-        <td>
-            <!-- manage attendees btn -->
-            <a href="/events/@eventItem.Id/attendees">Manage Attendees</a>
+                    <!-- edit and delete buttons -->
+                    <a asp-action="Edit" asp-route-id="@eventItem.Id">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@eventItem.Id" method="post" style="display:inline;">
+                        <button type="submit">Delete</button>
+                    </form>
+                }
 
-            <!-- edit and delete buttons -->
-            <a asp-action="Edit" asp-route-id="@eventItem.Id">Edit</a>
-            <form asp-action="Delete" asp-route-id="@eventItem.Id" method="post" style="display:inline;">
-                <button type="submit">Delete</button>
-            </form>
-                <!-- event details btn -->
+                <!-- event details btn (everyone) -->
                 <a asp-action="EventDetails" asp-route-id="@eventItem.Id">Details</a>
-        </td>
-    </tr>
-}
+            </td>
+        </tr>
+    }
 
 </table>
