@@ -1,7 +1,9 @@
 using Assignment1.Data;
 using Assignment1.Services;
 using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Assignment1
 {
@@ -22,6 +24,16 @@ namespace Assignment1
                 new BlobServiceClient(builder.Configuration["AzureStorage:ConnectionString"]));
 
             builder.Services.AddScoped<BlobStorageService>();
+
+            builder.Services
+                .AddDefaultIdentity<IdentityUser>(options => {
+                    options.Password.RequireDigit = true;
+                    options.Password.RequiredLength = 8;
+                    options.Password.RequireNonAlphanumeric = false;
+                })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
 
             var app = builder.Build();
 
@@ -44,7 +56,9 @@ namespace Assignment1
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+            app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",
