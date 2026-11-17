@@ -9,7 +9,7 @@ namespace Assignment1
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -39,8 +39,7 @@ namespace Assignment1
 
             using (var scope = app.Services.CreateScope())
             {
-                var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                DbInitializer.Initialize(context);
+                await DbInitializer.Initialize(scope.ServiceProvider);
             }
 
             // Configure the HTTP request pipeline.
