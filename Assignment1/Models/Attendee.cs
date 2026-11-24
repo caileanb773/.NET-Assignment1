@@ -1,4 +1,6 @@
-﻿namespace Assignment1.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Assignment1.Models
 {
     public class Attendee
     {
@@ -8,5 +10,7 @@
         public string Email { get; set; }
         public int EventId { get; set; }
         public Event? Event { get; set; }
+
+        public string? UserId { get; set; }
     }
 }
