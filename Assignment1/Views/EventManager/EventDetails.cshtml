@@ -14,16 +14,54 @@
 <p><strong>Description:</strong> @Model.Description</p>
 <p><strong>Date:</strong> @Model.Date</p>
 <p><strong>Location:</strong> @Model.Location</p>
-
 @if (User.IsInRole("Organizer"))
 {
-    <p>
-        <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-        <form asp-action="Delete" asp-route-id="@Model.Id" method="post" style="display:inline;">
-            <button type="submit">Delete</button>
+    <div class="mt-4 mb-4">
+        <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-primary">Edit Event</a>
+
+        <form asp-action="Delete"
+              asp-route-id="@Model.Id"
+              method="post"
+              style="display:inline;">
+            <button type="submit"
+                    class="btn btn-danger"
+                    style="background-color: red !important; color: white !important;">
+                Delete Event
+            </button>
         </form>
-        <a href="/events/@Model.Id/attendees">Manage Attendees</a>
-    </p>
+
+        <a href="/events/@Model.Id/attendees"
+           class="btn btn-success">Manage Attendees</a>
+    </div>
+}
+
+@if (User.Identity!.IsAuthenticated)
+{
+    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+    var isRegistered = Model.Attendees.Any(a => a.UserId == userId);
+
+    if (isRegistered)
+    {
+        <p class="text-success">You are registered for this event!</p>
+
+        <form asp-controller="EventManager"
+              asp-action="Unregister"
+              asp-route-eventId="@Model.Id"
+              method="post">
+            <button type="submit" class="btn btn-danger">Unregister</button>
+        </form>
+    }
+    else
+    {
+        <form asp-controller="EventManager"
+              asp-action="Register"
+              asp-route-eventId="@Model.Id"
+              method="post">
+            <button type="submit" class="btn btn-success">Register for Event</button>
+        </form>
+    }
 }
 
 @if (User.Identity!.IsAuthenticated)
@@ -36,7 +74,7 @@
     }
     else
     {
-        <ul>
+        <ul class="attendee-list">
             @foreach (var attendee in Model.Attendees)
             {
                 <li>@attendee.Name (@attendee.Email)</li>

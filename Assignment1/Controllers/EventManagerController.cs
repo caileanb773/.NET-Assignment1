@@ -4,6 +4,7 @@ using Assignment1.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Assignment1.Controllers
 {
@@ -67,6 +68,58 @@ namespace Assignment1.Controllers
             return Redirect($"/events/{eventId}/attendees");
         }
 
+        // register action that users from both groups can use
+        [Authorize]
+        [HttpPost("/events/{eventId}/register")]
+        public IActionResult Register(int eventId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var eventItem = _context.Events
+                .Include(e => e.Attendees)
+                .FirstOrDefault(e => e.Id == eventId);
+
+            if (eventItem == null) return NotFound();
+
+            // prevent duplicate registrations
+            if (eventItem.Attendees.Any(a => a.UserId == userId))
+            {
+                return RedirectToAction("EventDetails", new { id = eventId });
+            }
+
+            var attendee = new Attendee
+            {
+                Id = Guid.NewGuid().ToString(),
+                EventId = eventId,
+                UserId = userId,
+                Name = User.Identity!.Name!,
+                Email = User.FindFirstValue(ClaimTypes.Email)!
+            };
+
+            _context.Attendees.Add(attendee);
+            _context.SaveChanges();
+
+            return RedirectToAction("EventDetails", new { id = eventId });
+        }
+
+        [Authorize]
+        [HttpPost("/events/{eventId}/unregister")]
+        public IActionResult Unregister(int eventId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var attendee = _context.Attendees.FirstOrDefault(
+                a => a.UserId == userId && a.EventId == eventId);
+
+            if (attendee != null)
+            {
+                _context.Attendees.Remove(attendee);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("EventDetails", new { id = eventId });
+        }
+
         // display the create event form
         [Authorize(Roles = "Organizer")]
         public IActionResult Create()
@@ -96,7 +149,7 @@ namespace Assignment1.Controllers
                 return BadRequest(ModelState);
             }
 
-                return View(eventItem);
+                //return View(eventItem);
         }
 
         // display the edit event form
@@ -161,7 +214,7 @@ namespace Assignment1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize(Roles = "Organizer")]
+        [Authorize]
         public IActionResult EventDetails(int id)
         {
             var eventItem = _context.Events
