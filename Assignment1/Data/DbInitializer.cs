@@ -15,7 +15,7 @@ namespace Assignment1.Data
             context.Database.Migrate();
 
             // roles
-            string[] roles = { "Organizer" };
+            string[] roles = { "Organizer", "Attendee" };
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
@@ -26,7 +26,7 @@ namespace Assignment1.Data
 
             // users
             await EnsureUser(userManager, "organizer@test.com", "Password123!", "Organizer");
-            await EnsureUser(userManager, "user@test.com", "Password123!", null);
+            await EnsureUser(userManager, "user@test.com", "Password123!", "Attendee");
 
             // events (only seeding if no events exist)
             if (!context.Events.Any())
