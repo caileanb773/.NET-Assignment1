@@ -1,8 +1,10 @@
 ﻿using Assignment1.Data;
+using Assignment1.Hubs;
 using Assignment1.Models;
 using Assignment1.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -14,11 +16,16 @@ namespace Assignment1.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly BlobStorageService _blobStorageService;
+        private readonly IHubContext<AttendeeHub> _hub;
 
-        public EventManagerController(ApplicationDbContext context, BlobStorageService blobStorageService)
+        public EventManagerController(
+            ApplicationDbContext context,
+            BlobStorageService blobStorageService,
+            IHubContext<AttendeeHub> hub)
         {
             _context = context;
             _blobStorageService = blobStorageService;
+            _hub = hub;
         }
 
         // return index view, showing the table of events. only anonymous action
