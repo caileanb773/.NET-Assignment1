@@ -155,6 +155,9 @@ namespace Assignment1.Controllers
                     eventItem.BannerUrl = await _blobStorageService.UploadImageAsync(bannerImage);
                 }
 
+                // set the event owner's id
+                eventItem.OrganizerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
                 _context.Events.Add(eventItem);
                 _context.SaveChanges();
 
