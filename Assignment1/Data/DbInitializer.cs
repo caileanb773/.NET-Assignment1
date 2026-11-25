@@ -28,6 +28,9 @@ namespace Assignment1.Data
             await EnsureUser(userManager, "organizer@test.com", "Password123!", "Organizer");
             await EnsureUser(userManager, "user@test.com", "Password123!", "Attendee");
 
+            // find organizer to assign them as the owner of the seeded events
+            var organizer = await userManager.FindByEmailAsync("organizer@test.com");
+
             // events (only seeding if no events exist)
             if (!context.Events.Any())
             {
@@ -40,6 +43,7 @@ namespace Assignment1.Data
                         Date = DateTime.Now.AddDays(7),
                         Location = "C123",
                         BannerUrl = "",
+                        OrganizerId = organizer!.Id,
                         Attendees = new List<Attendee>
                         {
                             new Attendee { Id = Guid.NewGuid().ToString(), Name = "Dale Cooper", Email = "Cooper@test.com" },
@@ -53,6 +57,7 @@ namespace Assignment1.Data
                         Date = DateTime.Now.AddDays(14),
                         Location = "T123",
                         BannerUrl = "",
+                        OrganizerId = organizer!.Id,
                         Attendees = new List<Attendee>
                         {
                             new Attendee { Id = Guid.NewGuid().ToString(), Name = "MIKE", Email = "Mike@test.com" },
@@ -66,6 +71,7 @@ namespace Assignment1.Data
                         Date = DateTime.Now.AddDays(21),
                         Location = "A123",
                         BannerUrl = "",
+                        OrganizerId = organizer!.Id,
                         Attendees = new List<Attendee>
                         {
                             new Attendee { Id = Guid.NewGuid().ToString(), Name = "Big Ed", Email = "BigEd@test.com" },
