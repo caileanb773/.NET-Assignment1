@@ -9,7 +9,6 @@
         public string Location { get; set; }
         public string BannerUrl { get; set; } = "";
         public List<Attendee> Attendees { get; set; } = new();
-
         public string? OrganizerId { get; set; }
     }
 }
