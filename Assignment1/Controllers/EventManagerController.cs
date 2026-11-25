@@ -78,7 +78,7 @@ namespace Assignment1.Controllers
         // register action that users from both groups can use
         [Authorize]
         [HttpPost("/events/{eventId}/register")]
-        public IActionResult Register(int eventId)
+        public async Task<IActionResult> Register(int eventId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -105,6 +105,15 @@ namespace Assignment1.Controllers
 
             _context.Attendees.Add(attendee);
             _context.SaveChanges();
+
+            // broadcast an updated attendee count to al clients viewing this event
+            await _hub.Clients
+                .Group($"event-{eventId}")
+                .SendAsync("AttendeeRegistered", new
+                {
+                    attendeeCount = eventItem.Attendees.Count,
+                    attendeeName = attendee.Name
+                });
 
             return RedirectToAction("EventDetails", new { id = eventId });
         }
