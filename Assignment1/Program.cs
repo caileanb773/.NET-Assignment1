@@ -1,9 +1,10 @@
 using Assignment1.Data;
+using Assignment1.Hubs;
 using Assignment1.Services;
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
+
 
 namespace Assignment1
 {
@@ -34,6 +35,8 @@ namespace Assignment1
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            // use signalR
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
@@ -61,6 +64,9 @@ namespace Assignment1
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            // map hub to endpoint
+            app.MapHub<AttendeeHub>("/attendeeHub");
 
             app.MapRazorPages();
             app.Run();
