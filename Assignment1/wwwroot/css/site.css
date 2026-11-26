@@ -112,38 +112,6 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Buttons */
-
-.btn {
-    border-radius: 7px;
-    padding: 8px 16px;
-    font-weight: 600;
-    transition: background 0.2s, transform 0.2s;
-}
-
-.btn-primary {
-    background: var(--primary);
-    border-color: var(--primary);
-}
-
-.btn-primary:hover {
-    background: var(--primary-dark);
-    border-color: var(--primary-dark);
-    transform: translateY(-1px);
-}
-
-.btn-success {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #102f2a;
-}
-
-.btn-success:hover {
-    background: var(--accent-hover);
-    border-color: var(--accent-hover);
-    color: white;
-}
-
 /* Forms */
 
 .form-group {
@@ -209,9 +177,9 @@ li {
     margin-top: 40px;
 }
 
-/* Button styling */
-a.btn,
-button.btn {
+/* Buttons */
+
+.btn {
     display: inline-block;
     padding: 10px 18px;
     border-radius: 7px;
@@ -220,38 +188,44 @@ button.btn {
     border: 1px solid transparent;
     cursor: pointer;
     margin-right: 6px;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
-/* Primary */
-a.btn-primary,
-button.btn-primary {
-    background-color: #243b53 !important;
-    color: white !important;
+.btn-primary {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    color: white;
 }
 
-/* Success */
-a.btn-success,
-button.btn-success {
-    background-color: #42bfa5 !important;
-    color: #102f2a !important;
+    .btn-primary:hover {
+        background-color: var(--primary-dark);
+        border-color: var(--primary-dark);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+.btn-success {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #102f2a;
 }
 
-/* Danger */
-a.btn-danger,
-button.btn-danger {
-    background-color: #dc3545 !important;
-    color: white !important;
+    .btn-success:hover {
+        background-color: var(--accent-hover);
+        border-color: var(--accent-hover);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
 }
 
-/* Secondary */
-a.btn-outline-secondary {
-    background-color: transparent !important;
-    color: #526477 !important;
-    border-color: #526477 !important;
-}
-
-a.btn:hover,
-button.btn:hover {
-    filter: brightness(0.9);
-    text-decoration: none;
-}
+    .btn-danger:hover {
+        background-color: #bb2d3b;
+        border-color: #bb2d3b;
+        color: white;
+        transform: translateY(-1px);
+    }

@@ -18,7 +18,7 @@
     <label>Email</label>
     <input type="email" name="Email" />
 
-    <button type="submit">Sign Up</button>
+    <button type="submit" class="btn btn-primary">Sign Up</button>
     <a asp-controller="EventManager" asp-action="Index">Back to Events</a>
 </form>
 
@@ -47,7 +47,7 @@ else
                   asp-route-attendeeId="@att.Id"
                   method="post"
                   style="display:inline;">
-                <button type="submit">Delete</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </p>
     }

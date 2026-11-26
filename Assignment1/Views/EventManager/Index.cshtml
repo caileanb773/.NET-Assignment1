@@ -9,7 +9,7 @@
 
 @if (User.IsInRole("Organizer"))
 {
-    <a asp-action="Create">Create Event</a>
+    <a asp-action="Create" class="btn btn-primary">Create Event</a>
 }
 
 <table>
@@ -29,18 +29,24 @@
             <td>
                 @if (User.IsInRole("Organizer"))
                 {
-                    <!-- manage attendees btn -->
-                    <a href="/events/@eventItem.Id/attendees">Manage Attendees</a>
+                    <a href="/events/@eventItem.Id/attendees"
+                       class="btn btn-success">Manage Attendees</a>
 
-                    <!-- edit and delete buttons -->
-                    <a asp-action="Edit" asp-route-id="@eventItem.Id">Edit</a>
-                    <form asp-action="Delete" asp-route-id="@eventItem.Id" method="post" style="display:inline;">
-                        <button type="submit">Delete</button>
+                    <a asp-action="Edit"
+                       asp-route-id="@eventItem.Id"
+                       class="btn btn-primary">Edit</a>
+
+                    <form asp-action="Delete"
+                          asp-route-id="@eventItem.Id"
+                          method="post"
+                          style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
                     </form>
                 }
 
-                <!-- event details btn (everyone) -->
-                <a asp-action="EventDetails" asp-route-id="@eventItem.Id">Details</a>
+                <a asp-action="EventDetails"
+                   asp-route-id="@eventItem.Id"
+                   class="btn btn-outline-secondary">Details</a>
             </td>
         </tr>
     }
