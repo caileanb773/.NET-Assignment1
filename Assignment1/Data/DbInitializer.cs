@@ -80,21 +80,21 @@ namespace Assignment1.Data
                     }
                 };
 
-                // assign organizer as owner of events
-                var unownedEvents = context.Events
-                    .Where(e => e.OrganizerId == null)
-                    .ToList();
-
-                foreach (var eventItem in unownedEvents)
-                {
-                    eventItem.OrganizerId = organizer!.Id;
-                }
-
-                context.SaveChanges();
-
                 context.Events.AddRange(events);
                 context.SaveChanges();
             }
+
+            // assign organizer as owner of events
+            var unownedEvents = context.Events
+                .Where(e => e.OrganizerId == null)
+                .ToList();
+
+            foreach (var eventItem in unownedEvents)
+            {
+                eventItem.OrganizerId = organizer!.Id;
+            }
+
+            context.SaveChanges();
         }
 
         private static async Task EnsureUser(UserManager<IdentityUser> userManager,
