@@ -115,6 +115,14 @@ namespace Assignment1.Controllers
                     attendeeName = attendee.Name
                 });
 
+            // send notification to event organizer
+            if (!string.IsNullOrEmpty(eventItem.OrganizerId))
+            {
+                await _hub.Clients
+                    .User(eventItem.OrganizerId)
+                    .SendAsync("OrganizerNotification", $"{attendee.Email} just registered for your {eventItem.Title}");
+            }
+
             return RedirectToAction("EventDetails", new { id = eventId });
         }
 
