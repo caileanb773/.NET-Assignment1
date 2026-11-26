@@ -118,6 +118,11 @@
         }
     });
 
+    // handler for organizer notification on attendee registration
+    connection.on("OrganizerNotification", function (message) {
+        alert(message);
+    });
+
 </script>
 
 <a asp-action="Index">Back to Events</a>
