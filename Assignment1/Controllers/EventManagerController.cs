@@ -128,7 +128,7 @@ namespace Assignment1.Controllers
 
         [Authorize]
         [HttpPost("/events/{eventId}/unregister")]
-        public IActionResult Unregister(int eventId)
+        public async Task<IActionResult> Unregister(int eventId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
@@ -140,6 +140,16 @@ namespace Assignment1.Controllers
                 _context.Attendees.Remove(attendee);
                 _context.SaveChanges();
             }
+
+            var attendeeCount = _context.Attendees.Count(a => a.EventId == eventId);
+
+            await _hub.Clients
+                .Group($"event-{eventId}")
+                .SendAsync("AttendeeUnregistered", new
+                {
+                    attendeeCount,
+                    attendeeName = attendee.Name
+                });
 
             return RedirectToAction("EventDetails", new { id = eventId });
         }

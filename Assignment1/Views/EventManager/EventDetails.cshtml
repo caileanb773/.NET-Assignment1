@@ -1,5 +1,6 @@
 ﻿@model Assignment1.Models.Event
 
+
 @{
     ViewData["Title"] = "Event Details";
 }
@@ -14,6 +15,7 @@
 <p><strong>Description:</strong> @Model.Description</p>
 <p><strong>Date:</strong> @Model.Date</p>
 <p><strong>Location:</strong> @Model.Location</p>
+
 @if (User.IsInRole("Organizer"))
 {
     <div class="mt-4 mb-4">
@@ -35,6 +37,7 @@
         <a href="/events/@Model.Id/attendees"
            class="btn btn-success">Manage Attendees</a>
     </div>
+
 }
 
 @if (User.Identity!.IsAuthenticated)
@@ -62,25 +65,59 @@
             <button type="submit" class="btn btn-success">Register for Event</button>
         </form>
     }
+
+    <h2>Attendees (<span id="attendee-count">@Model.Attendees.Count</span>)</h2>
+
+    <ul class="attendee-list" id="attendee-list">
+        @foreach (var attendee in Model.Attendees)
+        {
+            <li>@attendee.Name (@attendee.Email)</li>
+        }
+    </ul>
 }
 
-@if (User.Identity!.IsAuthenticated)
-{
-    <h2>Attendees (@Model.Attendees.Count)</h2>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    
+<script>
 
-    @if (Model.Attendees.Count == 0)
-    {
-        <p>No attendees yet.</p>
-    }
-    else
-    {
-        <ul class="attendee-list">
-            @foreach (var attendee in Model.Attendees)
-            {
-                <li>@attendee.Name (@attendee.Email)</li>
+    const eventId = @Model.Id;
+
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/attendeeHub")
+        .build();
+
+    connection.start()
+        .then(() => connection.invoke("JoinEventGroup", eventId))
+        .catch(err => console.error(err));
+    
+    // handler for attendees being registered
+    connection.on("AttendeeRegistered", function (data) {
+        document.getElementById("attendee-count").textContent = data.attendeeCount;
+
+        const attendeeList = document.getElementById("attendee-list");
+        const newAttendee = document.createElement("li");
+
+        newAttendee.textContent = data.attendeeName;
+        attendeeList.appendChild(newAttendee);
+    });
+
+    // handler for attendees being unregistered
+    connection.on("AttendeeUnregistered", function (data) {
+        document.getElementById("attendee-count").textContent =
+            data.attendeeCount;
+
+        const attendeeList = document.getElementById("attendee-list");
+        const attendees = attendeeList.getElementsByTagName("li");
+
+        // need to remove just the one attendee without refreshing the entire list
+        for (let attendee of attendees) {
+            if (attendee.textContent.startsWith(data.attendeeName + " (")) {
+                attendee.remove();
+                break;
             }
-        </ul>
-    }
-}
+        }
+    });
+
+</script>
 
 <a asp-action="Index">Back to Events</a>
